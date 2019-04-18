@@ -48,3 +48,36 @@
       </Text>
     </View>
   </View>
+
+
+
+  return !errorFetch && animating ? (
+  <View style={[styles.loader, styles.activityIndicator]}>
+    <ActivityIndicator
+      hidesWhenStopped
+      animating={true}
+      color="#bc2b78"
+      size={80}
+    />
+  </View>
+) : (
+    <FlatList
+      style={styles.container}
+      // contentContainerStyle={styles.pinContainer}
+      data={users}
+      renderItem={({ item, index }) => (
+        <View style={styles.pincontainer}>
+          <Pin
+            noImage={imageURL}
+            animating={animating}
+            pinSource={item}
+            columns={columns}
+            key={item.userName}
+          />
+        </View>
+      )}
+      keyExtractor={user => user.email}
+    // ItemSeparatorComponent={this.renderSeparator}
+    // ListHeaderComponent={this.renderHeader}
+    // ListHeaderComponent={() => <Header />}
+    />

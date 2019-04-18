@@ -4,13 +4,13 @@ import { Back, Heart, Share, More } from "../util/icons";
 
 class UtilityNavButton extends Component {
   render() {
-    const icon = this.props.icon;
+    const { icon, color } = this.props;
     switch (icon) {
       case "Back":
         return <Back />;
         break;
       case "Heart":
-        return <Heart />;
+        return <Heart color={color} />;
         break;
       case "Share":
         return <Share />;

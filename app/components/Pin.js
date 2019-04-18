@@ -1,5 +1,14 @@
 import React, { Component } from "react";
-import { StyleSheet, View, Text, Dimensions, Image } from "react-native";
+import {
+  ActivityIndicator,
+  TouchableOpacity,
+  StyleSheet,
+  View,
+  Text,
+  Dimensions,
+  Image
+} from "react-native";
+import Stars from "./Stars";
 
 import UtilityNavButton from "./UtilityNavButton";
 import Button from "./Button";
@@ -8,9 +17,18 @@ import LocalImage from "./LocalImage";
 const windowWidth = Dimensions.get("window").width;
 
 class Pin extends Component {
-  render() {
-    const { pinSource, image, columns } = this.props;
+  state = { heart: false };
 
+  toggleOnHeartPressed = () => {
+    console.log("heart clicked");
+    this.setState({ heart: !this.state.heart });
+  };
+
+  render() {
+    const { pinSource, columns } = this.props;
+    const { heart } = this.state;
+
+    // console.log("Pin Source data===>", pinSource);
     return (
       <View
         style={styles.PinContainer}
@@ -19,7 +37,13 @@ class Pin extends Component {
         <View style={styles.PinHeader}>
           <View style={styles.UtilityNav}>
             <UtilityNavButton icon="Back" />
-            <UtilityNavButton icon="Heart" />
+            <TouchableOpacity onPress={this.toggleOnHeartPressed}>
+              <UtilityNavButton
+                icon="Heart"
+                color={heart ? "red" : "#f2f2f2"}
+              />
+            </TouchableOpacity>
+
             <UtilityNavButton icon="Share" />
             <UtilityNavButton icon="More" />
           </View>
@@ -30,17 +54,31 @@ class Pin extends Component {
 
         <View style={styles.PinContent}>
           <LocalImage
-            source={{ uri: pinSource.imageSource }}
+            source={{
+              uri: pinSource.imageSource
+            }}
             originalWidth={parseInt(pinSource.originalWidth)}
             originalHeight={parseInt(pinSource.originalHeight)}
             columns={columns}
           />
+          <View style={styles.stars}>
+            <Stars rating={pinSource.rating} />
+          </View>
+          <Text style={{ letterSpacing: 1, fontSize: 18 }}>
+            {pinSource.name}
+          </Text>
         </View>
 
         <View style={styles.PinMeta}>
           <View style={styles.PinMetaTextContainer}>
             <Text style={styles.PinMetaText}>Saved from</Text>
-            <Text style={[styles.PinMetaText, styles.TextBold]}>
+            <Text
+              style={[
+                styles.PinMetaText,
+                styles.TextBold,
+                { color: "#0303ad" }
+              ]}
+            >
               website.com
             </Text>
           </View>
@@ -58,12 +96,11 @@ class Pin extends Component {
           </View>
           <View style={styles.PinUserContainer}>
             <Text style={styles.PinUserText}>
-              <Text style={styles.TextBold}>User Name </Text>saved to
+              <Text style={styles.TextBold}>{pinSource.userName} </Text>
+              saved to
               <Text style={styles.TextBold}> Space</Text>
             </Text>
-            <Text style={styles.PinUserText}>
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-            </Text>
+            <Text style={styles.PinUserText}>{pinSource.bio}</Text>
           </View>
         </View>
       </View>
@@ -71,6 +108,7 @@ class Pin extends Component {
   }
 }
 
+const getName = username => username.split(".")[0] || username.split("_")[0];
 const styles = StyleSheet.create({
   imageStyle: {
     width: 60,
@@ -179,10 +217,17 @@ const styles = StyleSheet.create({
     // paddingLeft: 50
   },
   PinUserText: {
-    fontSize: 21,
-    letterSpacing: 2
+    fontSize: 18
+    // letterSpacing: 2
     // width: "95%"
     // backgroundColor: "#f4f4f4"
-  }
+  },
+  activityIndicator: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    height: 80
+  },
+  stars: {}
 });
 export default Pin;
